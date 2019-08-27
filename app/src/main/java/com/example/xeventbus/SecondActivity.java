@@ -23,7 +23,8 @@ public class SecondActivity extends AppCompatActivity {
 
     public void send(View view) {
         XEventBus.getDefault().post(new Friend("aa", "12" + Thread.currentThread()));
-      /*  new Thread(new Runnable() {
+        finish();
+       /* new Thread(new Runnable() {
             @Override
             public void run() {
                 XEventBus.getDefault().post(new Friend("aa", "12" + Thread.currentThread()));

@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xeventbus.core.XEventBus;
 import com.example.xeventbus.core.XSubscriber;
 import com.example.xeventbus.core.XThreadMode;
 import com.example.xeventbus.manager.XHermes;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         XEventBus.getDefault().register(this);
         textView = findViewById(R.id.getMsg);
-
         XHermes.getDefault().init(this);
     }
 
@@ -31,10 +33,15 @@ public class MainActivity extends AppCompatActivity {
         XEventBus.getDefault().unRegister(this);
     }
 
-    @XSubscriber(threadMode = XThreadMode.MAIN)
+    @XSubscriber(threadMode = XThreadMode.POSTING)
     public void receive(Friend friend) {
         textView.setText(friend.toString());
-        // Toast.makeText(this, friend.toString(), Toast.LENGTH_SHORT).show();
+        try {
+
+            Toast.makeText(this, friend.toString(), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void turn(View view) {

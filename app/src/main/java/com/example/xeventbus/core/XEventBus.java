@@ -34,16 +34,16 @@ public class XEventBus {
         return xEventBus;
     }
 
-    public XEventBus() {
+    private XEventBus() {
         cacheMap = new HashMap<>();
         xHandler = new Handler(Looper.getMainLooper());
-        executorService= Executors.newCachedThreadPool();
+        executorService = Executors.newCachedThreadPool();
     }
 
     /**
      * 注册
      *
-     * @param subscriber
+     * @param subscriber 一般是类
      */
     public void register(Object subscriber) {
         //保存订阅者信息
@@ -66,6 +66,7 @@ public class XEventBus {
      * @return
      */
     private List<SubscriberMethod> getSubscriberMethods(Object subscriber) {
+        //有XSubscriber注解的方法集合
         List<SubscriberMethod> list = new ArrayList<>();
         Class<?> subscriberClass = subscriber.getClass();
         //需要在他父类中查找是否添加了注解的方法subscriber -->BaseActivity-->Activity,在Activity中不需要查找了
@@ -95,9 +96,10 @@ public class XEventBus {
                 //符合要求
                 XThreadMode xThreadMode = annotation.threadMode();
                 SubscriberMethod subscriberMethod = new SubscriberMethod(method, xThreadMode, parameterTypes[0]);
+                //把有XSubscriber注解的方法信息添加到集合
                 list.add(subscriberMethod);
             }
-
+            //当前类查找完，查找他的父类
             subscriberClass = subscriberClass.getSuperclass();
         }
 
@@ -108,12 +110,12 @@ public class XEventBus {
     /**
      * 取消注册
      *
-     * @param subscriber
+     * @param subscriber 一般是类
      */
     public void unRegister(Object subscriber) {
 
         List<SubscriberMethod> list = cacheMap.get(subscriber);
-        //如果有，
+        //如果有，就移除
         if (list != null) {
             cacheMap.remove(subscriber);
         }
@@ -123,9 +125,10 @@ public class XEventBus {
     /**
      * 发送
      *
-     * @param object
+     * @param object 类中方法的参数
      */
     public void post(final Object object) {
+        //拿到所有的类
         Set<Object> set = cacheMap.keySet();
         Iterator<Object> iterator = set.iterator();
         while (iterator.hasNext()) {
@@ -135,15 +138,16 @@ public class XEventBus {
             List<SubscriberMethod> list = cacheMap.get(next);
 
             for (final SubscriberMethod subMethod : list) {
-                //判断方法是否应该接受事件 isAssignableFrom类的参数类型与指定的类参数类型是否相同
+                //判断方法是否应该接受事件 isAssignableFrom类的参数类型是来自哪里，如果是来自这个object，就往下执行
                 if (subMethod.getEventType().isAssignableFrom(object.getClass())) {
-                    switch (subMethod.getxThreadMode()) {
+                    switch (subMethod.getThreadMode()) {
                         case MAIN://接收方法在主线程
 
                             if (Looper.myLooper() == Looper.getMainLooper()) {
+                                //post方法执行在主线程中
                                 invoke(subMethod, next, object);
                             } else {
-                                //post方法执行在主线程中，接收消息在主线程中
+                                //post方法执行在子线程中
                                 xHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -162,13 +166,26 @@ public class XEventBus {
                                         invoke(subMethod, next, object);
                                     }
                                 });
-                            }else {
+                            } else {
                                 //post执行在子线程
                                 invoke(subMethod, next, object);
                             }
 
                             break;
-                        case POSTING:
+                        case POSTING://接收方法与post在相同线程
+
+                            if (Looper.myLooper() == Looper.getMainLooper()) {
+                                //post执行在主线程
+                                xHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        invoke(subMethod, next, object);
+                                    }
+                                });
+                            } else {
+                                //post执行在子线程
+                                invoke(subMethod, next, object);
+                            }
                             break;
                     }
 
@@ -178,6 +195,13 @@ public class XEventBus {
 
     }
 
+    /**
+     * 执行XSubscriber方法
+     *
+     * @param subMethod  注册类中的方法信息
+     * @param next  类的实例
+     * @param object    类中方法的参数
+     */
     private void invoke(SubscriberMethod subMethod, Object next, Object object) {
         Method method = subMethod.getMethod();
         try {
