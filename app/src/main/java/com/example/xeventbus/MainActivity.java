@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.xeventbus.core.XEventBus;
 import com.example.xeventbus.core.XSubscriber;
 import com.example.xeventbus.core.XThreadMode;
+import com.example.xeventbus.manager.UserManager;
 import com.example.xeventbus.manager.XHermes;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,8 +24,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         XEventBus.getDefault().register(this);
-        textView = findViewById(R.id.getMsg);
+
+        //XHermes的init和注册
         XHermes.getDefault().init(this);
+        XHermes.getDefault().register(UserManager.class);
+
+        textView = findViewById(R.id.getMsg);
     }
 
     @Override

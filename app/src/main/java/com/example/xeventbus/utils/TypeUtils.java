@@ -14,6 +14,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 
+/**
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/28/028 8:09
+ * desc : XHermes的TypeUtils
+ **/
 public class TypeUtils {
 
     private static final HashSet<Class<?>> CONTEXT_CLASSES = new HashSet<Class<?>>() {
@@ -28,15 +34,26 @@ public class TypeUtils {
         }
     };
 
-
+    /**
+     * 获取方法ID
+     *
+     * @param method
+     * @return
+     */
     public static String getMethodId(Method method) {
-
+        // MethodName(String)----->java.lang.String
         StringBuilder stringBuilder = new StringBuilder(method.getName());
         stringBuilder.append('(').append(getMethodParameterTypes(method.getParameterTypes())).append(')');
-
+        //MethodName(java.lang.String)
         return stringBuilder.toString();
     }
 
+    /**
+     * 获取方法参数
+     *
+     * @param classes 类
+     * @return
+     */
     private static String getMethodParameterTypes(Class<?>[] classes) {
         StringBuilder stringBuilder = new StringBuilder();
         int length = classes.length;
@@ -52,6 +69,11 @@ public class TypeUtils {
 
     }
 
+    /**
+     *  获取类名
+     * @param clazz
+     * @return
+     */
     private static String getClassName(Class<?> clazz) {
         if (clazz == Boolean.class) {
             return "boolean";

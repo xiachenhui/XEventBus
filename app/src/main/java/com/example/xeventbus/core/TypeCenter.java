@@ -6,10 +6,17 @@ import com.example.xeventbus.utils.TypeUtils;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/28/028 8:00
+ * desc : XHermes的TypeCenter
+ **/
 public class TypeCenter {
     private static TypeCenter instance;
-    //为了减少反射，所以保存下来
+    //为了减少反射，所以保存下来。保存方法
     private final ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Method>> mRawMethod;
+    //保存类
     private final ConcurrentHashMap<String, Class<?>> mRawClass;
 
 

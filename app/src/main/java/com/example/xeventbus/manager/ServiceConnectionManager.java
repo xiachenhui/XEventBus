@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.example.xeventbus.MyEventBusService;
+import com.example.xeventbus.MyHermesService;
 import com.example.xeventbus.service.HermesService;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +24,7 @@ public class ServiceConnectionManager {
 
     //对应得binder 对象保存到hasmap中
     private final ConcurrentHashMap<Class<? extends HermesService>,
-            MyEventBusService> mHermesService = new ConcurrentHashMap<>();
+            MyHermesService> mHermesService = new ConcurrentHashMap<>();
 
 
     private final ConcurrentHashMap<Class<? extends HermesService>,
@@ -54,8 +54,8 @@ public class ServiceConnectionManager {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MyEventBusService myEventBusService = MyEventBusService.Stub.asInterface(service);
-            mHermesService.put(mClass, myEventBusService);
+            MyHermesService myHermesService = MyHermesService.Stub.asInterface(service);
+            mHermesService.put(mClass, myHermesService);
         }
 
         @Override

@@ -12,7 +12,7 @@ import com.example.xeventbus.service.HermesService;
  * author : xia chen hui
  * email : 184415359@qq.com
  * date : 2019/8/26/026 7:59
- * desc : 在清单文件中设置process，就可以设置为其他进程
+ * desc : 在清单文件中设置process，就可以设置为其他进程，测试XHermes
  **/
 public class OtherProcessActivity extends AppCompatActivity {
 
