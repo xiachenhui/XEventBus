@@ -22,16 +22,16 @@ public class HermesService extends Service {
     private MyHermesService.Stub mBinder = new MyHermesService.Stub() {
         @Override
         public Response send(Request request) throws RemoteException {
-            ResponseMake responceMake = null;
+            ResponseMake responseMake = null;
             switch (request.getType()) {
                 case XHermes.TYPE_GET:  //获取单列
-                    responceMake = new InstanceResponseMake();
+                    responseMake = new InstanceResponseMake();
                     break;
                 case XHermes.TYPE_NEW:
-                    responceMake = new ObjectResponseMake();
+                    responseMake = new ObjectResponseMake();
                     break;
             }
-            return responceMake.makeResponce(request);
+            return responseMake.makeResponce(request);
         }
     };
 }

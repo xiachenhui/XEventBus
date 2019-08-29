@@ -22,7 +22,7 @@ public class UserManager implements  IUserManager {
         }
         return userManager;
     }
-    @MethodId("com.example.xeventbus.manager.UserManager.setFriend")
+
     public void setFriend(Friend friend) {
         this.friend = friend;
     }

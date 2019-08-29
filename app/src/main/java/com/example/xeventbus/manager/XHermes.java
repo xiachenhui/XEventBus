@@ -21,7 +21,7 @@ import java.lang.reflect.Proxy;
 public class XHermes {
 
     private static XHermes hermes;
-    private static ServiceConnectionManager serviceConnectionManager;
+    private  ServiceConnectionManager serviceConnectionManager;
     private Context mContext;
 
     private Gson gson = new Gson();
