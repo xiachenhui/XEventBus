@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         XHermes.getDefault().register(UserManager.class);
 
         textView = findViewById(R.id.getMsg);
+        UserManager.getInstance().setFriend(new Friend("xch", "20"));
     }
 
     @Override

@@ -10,7 +10,16 @@ import android.os.Parcelable;
  * desc : 跨进程通讯是通过把对象序列化之后转为json数据，来传输
  **/
 public class Response implements Parcelable {
+    //    响应的对象
     private String data;
+
+    public String getData() {
+        return data;
+    }
+
+    public Response(String data) {
+        this.data = data;
+    }
 
     /**
      * 反序列化

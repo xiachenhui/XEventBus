@@ -8,6 +8,8 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.xeventbus.annotion.ClassId;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -70,7 +72,8 @@ public class TypeUtils {
     }
 
     /**
-     *  获取类名
+     * 获取类名
+     *
      * @param clazz
      * @return
      */
@@ -266,4 +269,17 @@ public class TypeUtils {
         throw new IllegalArgumentException();
     }
 
+    /**
+     * 通过注解获取class的Name值
+     * @param clazz
+     * @return
+     */
+    public static String getClassId(Class<?> clazz) {
+        ClassId classId = clazz.getAnnotation(ClassId.class);
+        if (classId != null) {
+            return classId.value();
+        } else {
+            return clazz.getName();
+        }
+    }
 }

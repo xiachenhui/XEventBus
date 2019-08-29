@@ -1,5 +1,9 @@
 package com.example.xeventbus.core;
 
+import android.text.TextUtils;
+
+import com.example.xeventbus.bean.RequestBean;
+import com.example.xeventbus.bean.RequestParameter;
 import com.example.xeventbus.manager.UserManager;
 import com.example.xeventbus.utils.TypeUtils;
 
@@ -61,5 +65,44 @@ public class TypeCenter {
             map.putIfAbsent(methodId, method);
             mRawMethod.putIfAbsent(managerClass, map);
         }
+    }
+    public Class<?> getClassType(String name) {
+        if (TextUtils.isEmpty(name)) {
+            return null;
+        }
+        Class<?> clazz = mRawClass.get(name);
+        if (clazz == null) {
+            try {
+                clazz = Class.forName(name);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return clazz;
+    }
+    public Method getMethod(Class<?> aClass, RequestBean requestBean) {
+        String methodName = requestBean.getMethodName();//setFriend()
+        if (methodName != null) {
+            mRawMethod.putIfAbsent(aClass, new ConcurrentHashMap<String, Method>());
+            ConcurrentHashMap<String, Method> methods = mRawMethod.get(aClass);
+            Method method = methods.get(methodName);
+            if(method != null){
+                return method;
+            }
+            int pos = methodName.indexOf('(');
+
+            Class[] paramters = null;
+            RequestParameter[] requestParameters = requestBean.getRequestParameter();
+            if (requestParameters != null && requestParameters.length > 0) {
+                paramters = new Class[requestParameters.length];
+                for (int i=0;i<requestParameters.length;i++) {
+                    paramters[i]=getClassType(requestParameters[i].getParameterClassName());
+                }
+            }
+            method = TypeUtils.getMethod(aClass, methodName.substring(0, pos), paramters);
+            methods.put(methodName, method);
+            return method;
+        }
+        return null;
     }
 }
