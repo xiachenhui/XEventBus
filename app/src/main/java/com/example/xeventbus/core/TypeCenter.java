@@ -1,6 +1,7 @@
 package com.example.xeventbus.core;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.xeventbus.bean.RequestBean;
 import com.example.xeventbus.bean.RequestParameter;
@@ -40,7 +41,7 @@ public class TypeCenter {
         return instance;
     }
 
-    public void register(Class<UserManager> managerClass) {
+    public void register(Class<?> managerClass) {
         //注册类
         registerClass(managerClass);
         //注册方法
@@ -48,7 +49,7 @@ public class TypeCenter {
     }
 
     //缓存class
-    private void registerClass(Class<UserManager> managerClass) {
+    private void registerClass(Class<?> managerClass) {
         String name = managerClass.getName();
         //putIfAbsent 如果是空就不会添加
         mRawClass.putIfAbsent(name, managerClass);
@@ -56,16 +57,20 @@ public class TypeCenter {
     }
 
     //缓存method
-    private void registerMethod(Class<UserManager> managerClass) {
+    private void registerMethod(Class<?> managerClass) {
         Method[] methods = managerClass.getMethods();
 
         for (Method method : methods) {
-            ConcurrentHashMap<String, Method> map = new ConcurrentHashMap<>();
-            String methodId = TypeUtils.getMethodId(method);
-            map.putIfAbsent(methodId, method);
-            mRawMethod.putIfAbsent(managerClass, map);
+            //存储类的方法，先存储类，然后创建map，再通过类获取map
+            mRawMethod.putIfAbsent(managerClass, new ConcurrentHashMap<String, Method>());
+            // map都不会为空
+            ConcurrentHashMap<String, Method> map = mRawMethod.get(managerClass);
+            String key = TypeUtils.getMethodId(method);
+            //把方法加到类中
+            map.put(key, method);
         }
     }
+
     public Class<?> getClassType(String name) {
         if (TextUtils.isEmpty(name)) {
             return null;
@@ -80,13 +85,16 @@ public class TypeCenter {
         }
         return clazz;
     }
+
     public Method getMethod(Class<?> aClass, RequestBean requestBean) {
         String methodName = requestBean.getMethodName();//setFriend()
         if (methodName != null) {
+            Log.i("xch", "getMethod: 1======="+methodName);
             mRawMethod.putIfAbsent(aClass, new ConcurrentHashMap<String, Method>());
             ConcurrentHashMap<String, Method> methods = mRawMethod.get(aClass);
             Method method = methods.get(methodName);
-            if(method != null){
+            if (method != null) {
+                Log.i("XCH", "getMethod: "+method.getName());
                 return method;
             }
             int pos = methodName.indexOf('(');
@@ -95,8 +103,8 @@ public class TypeCenter {
             RequestParameter[] requestParameters = requestBean.getRequestParameter();
             if (requestParameters != null && requestParameters.length > 0) {
                 paramters = new Class[requestParameters.length];
-                for (int i=0;i<requestParameters.length;i++) {
-                    paramters[i]=getClassType(requestParameters[i].getParameterClassName());
+                for (int i = 0; i < requestParameters.length; i++) {
+                    paramters[i] = getClassType(requestParameters[i].getParameterClassName());
                 }
             }
             method = TypeUtils.getMethod(aClass, methodName.substring(0, pos), paramters);

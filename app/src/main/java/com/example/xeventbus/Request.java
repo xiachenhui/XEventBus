@@ -35,6 +35,7 @@ public class Request implements Parcelable {
      */
     protected Request(Parcel in) {
         data = in.readString();
+        type = in.readInt();
     }
 
 
@@ -61,5 +62,6 @@ public class Request implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(data);
+        dest.writeInt(type);
     }
 }

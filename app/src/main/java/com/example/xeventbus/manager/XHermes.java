@@ -52,7 +52,7 @@ public class XHermes {
         this.mContext = context.getApplicationContext();
     }
 
-    public void register(Class<UserManager> managerClass) {
+    public void register(Class<?> managerClass) {
         typeCenter.register(managerClass);
     }
 
@@ -68,7 +68,7 @@ public class XHermes {
         return getProxy(HermesService.class, tClass);
     }
 
-    private <T> T getProxy(Class<HermesService> hermesServiceClass, Class<T> tClass) {
+    private <T> T getProxy(Class<? extends HermesService> hermesServiceClass, Class tClass) {
         ClassLoader classLoader = hermesServiceClass.getClassLoader();
         T proxy = (T) Proxy.newProxyInstance(classLoader, new Class<?>[]{tClass}, new XHermesInvocationHandler(hermesServiceClass, tClass));
         return proxy;
@@ -121,7 +121,7 @@ public class XHermes {
 
     }
 
-    public <T> Response sendObjectRequest(Class xHermesService, Class<T> aClass, Method method, Object[] args) {
+    public <T> Response sendObjectRequest(Class<HermesService>  xHermesService, Class<T> aClass, Method method, Object[] args) {
         RequestBean requestBean = new RequestBean();
 
         //set全类名

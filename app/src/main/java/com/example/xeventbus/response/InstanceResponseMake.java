@@ -10,10 +10,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Created by Administrator on 2018/5/21.
- */
-
-//创建 Responce
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/29/029 20:45
+ * desc : 创建Response
+ **/
 public class InstanceResponseMake extends ResponseMake {
     private Method mMethod;
     @Override
@@ -22,7 +23,7 @@ public class InstanceResponseMake extends ResponseMake {
         Object object = null;
         try {
             object = mMethod.invoke(null, mParameters);
-            Log.i("alan", "invokeMethod: " + object.toString());
+            Log.i("XCH", "invokeMethod: " + object.toString());
 //
             //            保存对象
             OBJECT_CENTER.putObject(object.getClass().getName(), object);

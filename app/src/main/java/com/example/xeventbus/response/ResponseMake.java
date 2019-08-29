@@ -25,12 +25,11 @@ public abstract class ResponseMake {
     protected static final ObjectCenter OBJECT_CENTER = ObjectCenter.getInstance();
 
 
-
-    protected abstract Object invokeMethod()  ;
+    protected abstract Object invokeMethod();
 
     protected abstract void setMethod(RequestBean requestBean);
 
-    public Response makeResponce(Request request) {
+    public Response makeResponse(Request request) {
         RequestBean requestBean = GSON.fromJson(request.getData(), RequestBean.class);
 //reslutClass  UserManage   getInstance  method()
         reslutClass = typeCenter.getClassType(requestBean.getResultClassName());
@@ -38,19 +37,19 @@ public abstract class ResponseMake {
         RequestParameter[] requestParameters = requestBean.getRequestParameter();
         if (requestParameters != null && requestParameters.length > 0) {
             mParameters = new Object[requestParameters.length];
-            for (int i=0;i<requestParameters.length;i++) {
+            for (int i = 0; i < requestParameters.length; i++) {
                 RequestParameter requestParameter = requestParameters[i];
                 Class<?> clazz = typeCenter.getClassType(requestParameter.getParameterClassName());
-                mParameters[i] =  GSON.fromJson(requestParameter.getParameterValue(), clazz);
+                mParameters[i] = GSON.fromJson(requestParameter.getParameterValue(), clazz);
             }
-        }else {
+        } else {
             mParameters = new Object[0];
         }
 
 //        Method.invoke(null,object[])  重载
         setMethod(requestBean);
 //        UserManager  getInstance()
-        Object resultObject=invokeMethod();
+        Object resultObject = invokeMethod();
 //    返回
         ResponseBean responseBean = new ResponseBean(resultObject);
 //把的到的结果序列化成字符串  resultObject--->

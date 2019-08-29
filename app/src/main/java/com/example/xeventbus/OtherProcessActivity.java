@@ -2,6 +2,7 @@ package com.example.xeventbus;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,13 +25,20 @@ public class OtherProcessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.activity_other_process);
         XHermes.getDefault().connect(this, HermesService.class);
+
     }
 
     public void send(View view) {
-        iUerManager = XHermes.getDefault().getInstance(IUserManager.class);
         Toast.makeText(this, iUerManager.getFriend().toString(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void get(View view) {
+        //获取发送的对象
+        iUerManager = XHermes.getDefault().getInstance(IUserManager.class);
+        Log.d("XCH---1", iUerManager.getFriend().toString());
 
     }
 

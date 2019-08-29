@@ -31,7 +31,7 @@ public class HermesService extends Service {
                     responseMake = new ObjectResponseMake();
                     break;
             }
-            return responseMake.makeResponce(request);
+            return responseMake.makeResponse(request);
         }
     };
 }

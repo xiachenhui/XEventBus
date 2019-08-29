@@ -28,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
         //XHermes的init和注册
         XHermes.getDefault().init(this);
         XHermes.getDefault().register(UserManager.class);
-
-        textView = findViewById(R.id.getMsg);
+        //设置要发送的对象
         UserManager.getInstance().setFriend(new Friend("xch", "20"));
+        textView = findViewById(R.id.getMsg);
+
     }
 
     @Override
@@ -43,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
     public void receive(Friend friend) {
         textView.setText(friend.toString());
         try {
-
             Toast.makeText(this, friend.toString(), Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
