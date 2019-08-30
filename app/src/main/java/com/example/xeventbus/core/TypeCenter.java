@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.example.xeventbus.bean.RequestBean;
 import com.example.xeventbus.bean.RequestParameter;
-import com.example.xeventbus.manager.UserManager;
 import com.example.xeventbus.utils.TypeUtils;
 
 import java.lang.reflect.Method;
@@ -15,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * author : xia chen hui
  * email : 184415359@qq.com
  * date : 2019/8/28/028 8:00
- * desc : XHermes的TypeCenter
+ * desc : XHermes的TypeCenter，缓存方法和类
  **/
 public class TypeCenter {
     private static TypeCenter instance;
@@ -71,6 +70,12 @@ public class TypeCenter {
         }
     }
 
+    /**
+     * 获取类的类型
+     *
+     * @param name
+     * @return
+     */
     public Class<?> getClassType(String name) {
         if (TextUtils.isEmpty(name)) {
             return null;
@@ -86,28 +91,38 @@ public class TypeCenter {
         return clazz;
     }
 
+    /**
+     * 获取客户端发送的对象的中的方法
+     *
+     * @param aClass
+     * @param requestBean
+     * @return
+     */
     public Method getMethod(Class<?> aClass, RequestBean requestBean) {
         String methodName = requestBean.getMethodName();//setFriend()
         if (methodName != null) {
-            Log.i("xch", "getMethod: 1======="+methodName);
+            Log.i("XCH", "getMethod: 1=======" + methodName);
+            //先保存方法
             mRawMethod.putIfAbsent(aClass, new ConcurrentHashMap<String, Method>());
             ConcurrentHashMap<String, Method> methods = mRawMethod.get(aClass);
             Method method = methods.get(methodName);
+            //缓存中有方法，直接返回
             if (method != null) {
-                Log.i("XCH", "getMethod: "+method.getName());
+                Log.i("XCH", "getMethod: " + method.getName());
                 return method;
             }
-            int pos = methodName.indexOf('(');
 
-            Class[] paramters = null;
+            //处理方法中的参数
+            int pos = methodName.indexOf('(');
+            Class[] parameters = null;
             RequestParameter[] requestParameters = requestBean.getRequestParameter();
             if (requestParameters != null && requestParameters.length > 0) {
-                paramters = new Class[requestParameters.length];
+                parameters = new Class[requestParameters.length];
                 for (int i = 0; i < requestParameters.length; i++) {
-                    paramters[i] = getClassType(requestParameters[i].getParameterClassName());
+                    parameters[i] = getClassType(requestParameters[i].getParameterClassName());
                 }
             }
-            method = TypeUtils.getMethod(aClass, methodName.substring(0, pos), paramters);
+            method = TypeUtils.getMethod(aClass, methodName.substring(0, pos), parameters);
             methods.put(methodName, method);
             return method;
         }

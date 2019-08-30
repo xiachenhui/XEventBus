@@ -1,10 +1,16 @@
 package com.example.xeventbus.bean;
 
+/**
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/30/030 7:12
+ * desc : 请求头的bean类
+ **/
 public class RequestBean {
     //请求单例的全类名
     private String className;
 
-    //类名
+    //得到的类名
     private String resultClassName;
 
     private String requestObject;

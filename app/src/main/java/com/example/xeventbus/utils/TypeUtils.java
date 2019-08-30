@@ -20,7 +20,7 @@ import java.util.HashSet;
  * author : xia chen hui
  * email : 184415359@qq.com
  * date : 2019/8/28/028 8:09
- * desc : XHermes的TypeUtils
+ * desc : XHermes的TypeUtils，操作方法和类
  **/
 public class TypeUtils {
 

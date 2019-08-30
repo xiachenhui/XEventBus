@@ -2,7 +2,6 @@ package com.example.xeventbus.manager;
 
 import com.example.xeventbus.Friend;
 import com.example.xeventbus.annotion.ClassId;
-import com.example.xeventbus.annotion.MethodId;
 
 @ClassId("com.example.xeventbus.manager.UserManager")
 public class UserManager implements  IUserManager {

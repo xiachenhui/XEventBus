@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.xeventbus.core.XEventBus;
 import com.example.xeventbus.manager.IUserManager;
-import com.example.xeventbus.manager.UserManager;
 import com.example.xeventbus.manager.XHermes;
-import com.example.xeventbus.service.HermesService;
+import com.example.xeventbus.service.XHermesService;
 
 /**
  * author : xia chen hui
@@ -26,17 +24,17 @@ public class OtherProcessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_process);
-        XHermes.getDefault().connect(this, HermesService.class);
+        XHermes.getDefault().connect(this, XHermesService.class);
 
     }
 
-    public void send(View view) {
+    public void getMessage(View view) {
         Toast.makeText(this, iUerManager.getFriend().toString(), Toast.LENGTH_SHORT).show();
 
     }
 
-    public void get(View view) {
-        //获取发送的对象
+    public void getObj(View view) {
+        //获取发送的对象，客户端
         iUerManager = XHermes.getDefault().getInstance(IUserManager.class);
         Log.d("XCH---1", iUerManager.getFriend().toString());
 

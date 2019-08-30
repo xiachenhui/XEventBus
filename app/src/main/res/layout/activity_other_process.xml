@@ -7,12 +7,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="get"
+        android:onClick="getObj"
         android:text="得到对象" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="send"
-        android:text="发送/得到消息" />
+        android:onClick="getMessage"
+        android:text="得到消息" />
 </LinearLayout>

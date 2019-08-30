@@ -13,8 +13,6 @@ import com.example.xeventbus.core.XThreadMode;
 import com.example.xeventbus.manager.UserManager;
 import com.example.xeventbus.manager.XHermes;
 
-import org.greenrobot.eventbus.EventBus;
-
 public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
@@ -28,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         //XHermes的init和注册
         XHermes.getDefault().init(this);
         XHermes.getDefault().register(UserManager.class);
-        //设置要发送的对象
+        //设置要发送的对象，服务端
         UserManager.getInstance().setFriend(new Friend("xch", "20"));
         textView = findViewById(R.id.getMsg);
 

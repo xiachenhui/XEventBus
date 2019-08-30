@@ -1,5 +1,11 @@
 package com.example.xeventbus;
 
+/**
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/30/030 7:01
+ * desc : 传递的对象
+ **/
 public class Friend {
     String name;
     String age;

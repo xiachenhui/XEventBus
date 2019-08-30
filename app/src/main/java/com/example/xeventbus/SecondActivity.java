@@ -38,7 +38,4 @@ public class SecondActivity extends AppCompatActivity {
         super.onDestroy();
         XEventBus.getDefault().unRegister(this);
     }
-
-    public void get(View view) {
-    }
 }

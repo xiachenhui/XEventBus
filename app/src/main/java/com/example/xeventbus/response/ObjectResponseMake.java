@@ -6,9 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Created by Administrator on 2018/5/23.
- */
-
+ * author : xia chen hui
+ * email : 184415359@qq.com
+ * date : 2019/8/30/030 7:01
+ * desc : 创建对象Response
+ **/
 public class ObjectResponseMake extends ResponseMake {
     private Method mMethod;
 
@@ -19,7 +21,7 @@ public class ObjectResponseMake extends ResponseMake {
 
         Exception exception;
         try {
-            return mMethod.invoke(mObject,mParameters);
+            return mMethod.invoke(mObject, mParameters);
         } catch (IllegalAccessException e) {
             exception = e;
         } catch (InvocationTargetException e) {
@@ -27,11 +29,12 @@ public class ObjectResponseMake extends ResponseMake {
         }
         return null;
     }
-//  1
+
+    //  1
     @Override
     protected void setMethod(RequestBean requestBean) {
-        mObject = OBJECT_CENTER.getObject(reslutClass.getName());
-//        getUser()    ---->method
+        mObject = OBJECT_CENTER.getObject(resultClass.getName());
+        //  getUser()    ---->method 获取方法
         Method method = typeCenter.getMethod(mObject.getClass(), requestBean);
         mMethod = method;
     }

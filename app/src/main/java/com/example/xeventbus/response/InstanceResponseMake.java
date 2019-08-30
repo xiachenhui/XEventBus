@@ -13,19 +13,18 @@ import java.lang.reflect.Method;
  * author : xia chen hui
  * email : 184415359@qq.com
  * date : 2019/8/29/029 20:45
- * desc : 创建Response
+ * desc : 创建单例Response
  **/
 public class InstanceResponseMake extends ResponseMake {
     private Method mMethod;
     @Override
     protected Object invokeMethod() {
 
-        Object object = null;
+        Object object;
         try {
             object = mMethod.invoke(null, mParameters);
             Log.i("XCH", "invokeMethod: " + object.toString());
-//
-            //            保存对象
+            // 保存对象
             OBJECT_CENTER.putObject(object.getClass().getName(), object);
         }catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -56,7 +55,7 @@ public class InstanceResponseMake extends ResponseMake {
             }
         }
         String methodName = requestBean.getMethodName(); //可能出现重载
-        Method method = TypeUtils.getMethodForGettingInstance(reslutClass, methodName, parameterTypes);
+        Method method = TypeUtils.getMethodForGettingInstance(resultClass, methodName, parameterTypes);
         mMethod = method;
     }
 }

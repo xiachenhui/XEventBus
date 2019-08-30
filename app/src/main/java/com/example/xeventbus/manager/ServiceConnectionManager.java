@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import com.example.xeventbus.MyHermesService;
 import com.example.xeventbus.Request;
 import com.example.xeventbus.Response;
-import com.example.xeventbus.service.HermesService;
+import com.example.xeventbus.service.XHermesService;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,10 +25,10 @@ public class ServiceConnectionManager {
     private static final ServiceConnectionManager ourInstance = new ServiceConnectionManager();
 
     //对应得binder 对象保存到hashMap中
-    private final ConcurrentHashMap<Class<? extends HermesService>,
+    private final ConcurrentHashMap<Class<? extends XHermesService>,
             MyHermesService> mHermesService = new ConcurrentHashMap<>();
     // 缓存HermesServiceConnection
-    private final ConcurrentHashMap<Class<? extends HermesService>,
+    private final ConcurrentHashMap<Class<? extends XHermesService>,
             HermesServiceConnection> mHermesServiceConnection = new ConcurrentHashMap<>();
 
     private ServiceConnectionManager() {
@@ -38,8 +38,13 @@ public class ServiceConnectionManager {
         return ourInstance;
     }
 
-
-    public void bind(Context context, String packageName, Class<HermesService> hermesServiceClass) {
+    /**
+     *  绑定服务
+     * @param context
+     * @param packageName
+     * @param hermesServiceClass 需要绑定的Service
+     */
+    public void bind(Context context, String packageName, Class<XHermesService> hermesServiceClass) {
         HermesServiceConnection hermesServiceConnection = new HermesServiceConnection(hermesServiceClass);
         mHermesServiceConnection.put(hermesServiceClass, hermesServiceConnection);
         Intent intent;
@@ -53,10 +58,19 @@ public class ServiceConnectionManager {
         context.bindService(intent, hermesServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public Response request(Class<HermesService> hermesServiceClass, Request request) {
+    /**
+     * 发送request
+     *
+     * @param hermesServiceClass 需要发送到的Service
+     * @param request            发送的对象
+     * @return
+     */
+    public Response request(Class<XHermesService> hermesServiceClass, Request request) {
+        //从之前的缓存中拿到代理对象
         MyHermesService myEventBusService = mHermesService.get(hermesServiceClass);
-        if(myEventBusService != null){
+        if (myEventBusService != null) {
             try {
+                //Aidl 获取Response
                 Response response = myEventBusService.send(request);
                 return response;
             } catch (RemoteException e) {
@@ -67,14 +81,15 @@ public class ServiceConnectionManager {
     }
 
     private class HermesServiceConnection implements ServiceConnection {
-        private Class<? extends HermesService> mClass;
+        private Class<? extends XHermesService> mClass;
 
-        public HermesServiceConnection(Class<HermesService> hermesServiceClass) {
+        public HermesServiceConnection(Class<XHermesService> hermesServiceClass) {
             mClass = hermesServiceClass;
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            //连接的时候拿到服务端代理
             MyHermesService myHermesService = MyHermesService.Stub.asInterface(service);
             mHermesService.put(mClass, myHermesService);
         }
